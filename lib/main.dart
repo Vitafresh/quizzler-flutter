@@ -25,24 +25,53 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  int questionIndex = 0; //Current question number
 
-  int questionNumber = 0;
+
   List<Icon> listScore = [];
-  List<String> listQuestions=[
+  List<String> listQuestions = [
     'You can lead a cow down stairs but not up stairs.',
     'Approximately one quarter of human bones are in the feet.',
     'A slug\'s blood is green.'
   ];
 
-    // Icon(
-    //   Icons.check,
-    //   color: Colors.green,
-    // ),
-    // Icon(
-    //   Icons.close,
-    //   color: Colors.red,
-    // )
 
+
+  List<bool> listAnswers = [
+    false,
+    true,
+    true,
+  ];
+
+  void addAnswerIcon(bool userAnswer, bool correctAnswer) {
+    int maxQuestions=listQuestions.length;
+    
+    setState(() {
+
+      if (userAnswer==correctAnswer) {
+        listScore.add(Icon(
+          Icons.check,
+          color: Colors.green,
+        ));
+      }
+      else{
+        listScore.add(Icon(
+          Icons.close,
+          color: Colors.red,
+        ));
+      }
+      questionIndex++;
+    }); //SetState
+  }
+
+  // Icon(
+  //   Icons.check,
+  //   color: Colors.green,
+  // ),
+  // Icon(
+  //   Icons.close,
+  //   color: Colors.red,
+  // )
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +85,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                listQuestions[questionNumber],
+                listQuestions[questionIndex],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -81,13 +110,9 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                setState(() {
-                  listScore.add(Icon(
-                    Icons.check,
-                    color: Colors.green,
-                  ));
-                  questionNumber++;
-                }); //SetState
+                bool correctAnswer = listAnswers[questionIndex];
+                addAnswerIcon(true, correctAnswer);
+
               }, //OnPressed
             ),
           ),
@@ -106,10 +131,24 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                setState(() {
-
-                  questionNumber++; //Go to next question (index)
-                });
+                bool correctAnswer = listAnswers[questionIndex];
+                if (correctAnswer == false) {
+                  setState(() {
+                    listScore.add(Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ));
+                    questionIndex++;
+                  }); //SetState
+                } else {
+                  setState(() {
+                    listScore.add(Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ));
+                    questionIndex++;
+                  }); //SetState
+                }
               },
             ),
           ),
