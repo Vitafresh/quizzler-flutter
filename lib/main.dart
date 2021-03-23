@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'question.dart';
 
 void main() => runApp(Quizzler());
 
@@ -26,29 +27,37 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   int questionIndex = 0; //Current question number
-
+  bool quizEnd = false;
 
   List<Icon> listScore = [];
-  List<String> listQuestions = [
-    'You can lead a cow down stairs but not up stairs.',
-    'Approximately one quarter of human bones are in the feet.',
-    'A slug\'s blood is green.'
+  List<Question> questionBank=[
+    Question(questionText: 'Париж это столица Франции?', questionAnswer: true),
+    Question(questionText: 'Херсон - это столица Украины?', questionAnswer: false),
+    Question(questionText: 'Кишенев - столица Румынии?', questionAnswer: false),
   ];
 
+  // List<String> listQuestions = [
+  //   'You can lead a cow down stairs but not up stairs.',
+  //   'Approximately one quarter of human bones are in the feet.',
+  //   'A slug\'s blood is green.'
+  // ];
+  //
+  // List<bool> listAnswers = [
+  //   false,
+  //   true,
+  //   true,
+  // ];
 
+  void checkUserAnswer(bool userAnswer) {
+    int maxQuestions=questionBank.length;
 
-  List<bool> listAnswers = [
-    false,
-    true,
-    true,
-  ];
+    if (quizEnd) {
+      return;
+    }
 
-  void addAnswerIcon(bool userAnswer, bool correctAnswer) {
-    int maxQuestions=listQuestions.length;
-    
     setState(() {
 
-      if (userAnswer==correctAnswer) {
+      if (userAnswer==questionBank[questionIndex].questionAnswer) {
         listScore.add(Icon(
           Icons.check,
           color: Colors.green,
@@ -60,7 +69,15 @@ class _QuizPageState extends State<QuizPage> {
           color: Colors.red,
         ));
       }
-      questionIndex++;
+
+      if (questionIndex < maxQuestions-1) {
+        questionIndex++;
+        // print('questionIndex = $questionIndex, maxQuestions=$maxQuestions');
+      }
+      else {
+        quizEnd=true;
+      }
+
     }); //SetState
   }
 
@@ -85,7 +102,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                listQuestions[questionIndex],
+                questionBank[questionIndex].questionText,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -110,8 +127,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                bool correctAnswer = listAnswers[questionIndex];
-                addAnswerIcon(true, correctAnswer);
+                checkUserAnswer(true);
 
               }, //OnPressed
             ),
@@ -131,24 +147,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                bool correctAnswer = listAnswers[questionIndex];
-                if (correctAnswer == false) {
-                  setState(() {
-                    listScore.add(Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ));
-                    questionIndex++;
-                  }); //SetState
-                } else {
-                  setState(() {
-                    listScore.add(Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ));
-                    questionIndex++;
-                  }); //SetState
-                }
+                checkUserAnswer(false);
               },
             ),
           ),
