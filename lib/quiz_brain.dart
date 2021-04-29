@@ -1,7 +1,10 @@
 import 'question.dart';
 
-class QuizBrain{
-  List<Question> questionBank=[
+class QuizBrain {
+  int _questionIndex = 0;
+  bool _quizEnd = false;
+
+  List<Question> _questionBank = [
     Question('Some cats are actually allergic to humans', true),
     Question('You can lead a cow down stairs but not up stairs.', false),
     Question('Approximately one quarter of human bones are in the feet.', true),
@@ -27,8 +30,38 @@ class QuizBrain{
     Question(
         'In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.',
         true),
-    Question('Париж это столица Франции?', true),
-    Question('Херсон - это столица Украины?', false),
-    Question('Кишенев - столица Румынии?', false),
+    // Question('Париж это столица Франции?', true),
+    // Question('Херсон - это столица Украины?', false),
+    // Question('Кишенев - столица Румынии?', false),
   ];
+
+  String getQuestionText() {
+    return _questionBank[_questionIndex].questionText;
+  }
+
+  bool getCorrectAnswer() {
+    return _questionBank[_questionIndex].questionAnswer;
+  }
+
+  int getNumberOfQuestions() {
+    return _questionBank.length;
+  }
+
+  int getQuestionIndex() {
+    return _questionIndex;
+  }
+
+  void gotoNextQuestion() {
+    if (_questionIndex < _questionBank.length - 1) {
+      //Go to the next question index
+      _questionIndex++;
+    } else {
+      //It was the last question
+      _quizEnd = true;
+    }
+  }
+
+  bool isQuizEnded() {
+    return _quizEnd;
+  }
 }
