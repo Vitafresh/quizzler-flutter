@@ -3,6 +3,7 @@ import 'question.dart';
 class QuizBrain {
   int _questionIndex = 0;
   bool _quizEnd = false;
+  int _score=0;
 
   List<Question> _questionBank = [
     Question('Some cats are actually allergic to humans', true),
@@ -35,6 +36,8 @@ class QuizBrain {
     // Question('Кишенев - столица Румынии?', false),
   ];
 
+
+
   String getQuestionText() {
     return _questionBank[_questionIndex].questionText;
   }
@@ -61,7 +64,24 @@ class QuizBrain {
     }
   }
 
-  bool isQuizEnded() {
+  bool isQuizFinished() {
     return _quizEnd;
   }
+
+  void addScore(){
+    _score++;
+  }
+
+  int getScore(){
+    return _score;
+  }
+
+  void resetQuiz(){
+    _questionIndex=0;
+    _quizEnd=false;
+    _score=0;
+  }
+
+
+
 }

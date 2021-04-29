@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -30,18 +31,43 @@ class _QuizPageState extends State<QuizPage> {
   QuizBrain quizBrain = QuizBrain();
 
   void checkUserAnswer(bool userAnswer) {
-    if (quizBrain.isQuizEnded()) {
+    setState(() {
+
+    if (quizBrain.isQuizFinished()) {
       //All questions were displayed
+
+      //Alert(context: context, title: "EndOfQuiz", desc: "You've answered all questions!").show();
+
+      Alert(
+        context: context,
+        type: AlertType.success,
+        title: "End of quiz",
+        desc: "You've answered all questions! Score = " + quizBrain.getScore().toString(),
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Круто!",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
+
+      quizBrain.resetQuiz();
+      listScore.clear();
       return;
     }
 
-    setState(() {
+
       if (userAnswer == quizBrain.getCorrectAnswer()) {
         //Correct answer
         listScore.add(Icon(
           Icons.check,
           color: Colors.green,
         ));
+        quizBrain.addScore();
       } else {
         //Wrong answer
         listScore.add(Icon(
